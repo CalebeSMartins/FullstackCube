@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FullstackCube.Controllers
 {
-    [Route("api/dashboards")]
+    [Route("api/dashboards/participantes")]
     [ApiController]
     public class DashboardController : ControllerBase
     {
@@ -26,28 +26,31 @@ namespace FullstackCube.Controllers
             _dashboardContext.SaveChanges();
             return Ok();
         }
-        [HttpPut]
-        public IActionResult Put([FromBody] Participante participante)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id)
         {
-            _dashboardContext.Participantes.UpdateRange(participante);
+            var participanteDb = _dashboardContext.Participantes.Where(x => x.Id == id).FirstOrDefault();
 
-            if (participante.Id == 0)
+            if (participanteDb is null)
             {
-                return BadRequest();
+                return NotFound("Participante não encontrado :(");
             }
 
+            _dashboardContext.Participantes.Update(participanteDb);
             _dashboardContext.SaveChanges();
             return Ok();
         }
-        [HttpDelete]
-        public IActionResult Delete([FromBody] Participante participante)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
-            if (participante.Id == 0)
+            var participanteDb = _dashboardContext.Participantes.Where(x => x.Id == id).FirstOrDefault();
+
+            if (participanteDb is null)
             {
-                return BadRequest();
+                return NotFound("Participante não encontrado :(");
             }
 
-            _dashboardContext.Participantes.RemoveRange(participante);
+            _dashboardContext.Participantes.Remove(participanteDb);
             _dashboardContext.SaveChanges();
             return Ok();
         }
