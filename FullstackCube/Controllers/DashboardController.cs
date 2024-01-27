@@ -26,5 +26,30 @@ namespace FullstackCube.Controllers
             _dashboardContext.SaveChanges();
             return Ok();
         }
+        [HttpPut]
+        public IActionResult Put([FromBody] Participante participante)
+        {
+            _dashboardContext.Participantes.UpdateRange(participante);
+
+            if (participante.Id == 0)
+            {
+                return BadRequest();
+            }
+
+            _dashboardContext.SaveChanges();
+            return Ok();
+        }
+        [HttpDelete]
+        public IActionResult Delete([FromBody] Participante participante)
+        {
+            if (participante.Id == 0)
+            {
+                return BadRequest();
+            }
+
+            _dashboardContext.Participantes.RemoveRange(participante);
+            _dashboardContext.SaveChanges();
+            return Ok();
+        }
     }
 }
